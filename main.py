@@ -5,6 +5,7 @@ from mainwindow import Ui_MainWindow
 import re
 import time
 import threading
+import ast
 #Geräte importieren
 from sg390serial import Sg390 as Sgclass
 from ke2010gpib import Ke2010 as Vmclass
@@ -33,6 +34,16 @@ class MainWindow(QMainWindow):
         self.tick_length = 100
         self.timer.start(self.tick_length)
         self.timestamp = time.time()
+
+        #Vorfüllen der Verbindungen aus connectioncache Datei
+        prev_conn_cache = open("connectioncache","r+")
+        prev_conn = ast.literal_eval(prev_conn_cache.read())
+        print(prev_conn)
+        if prev_conn["sg"]!="":
+            self.ui.target_ip_line.setText(prev_conn["sg"])
+        if prev_conn["ro"]!="":
+            self.ui.readout_connect_line.setText(prev_conn["ro"])
+            
         
     #Signalgenerator verbinden
     def connect_microwave_clicked(self):

@@ -1,4 +1,4 @@
 {
-"sg": "COM1",
-"ro": "GPIB0::25::INSTR"
+"sg" : "COM1",
+"ro" : "GPIB0::25::INSTR"
 }
