@@ -7,6 +7,9 @@ from PySide6 import QtWidgets as qtw
 from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
 from matplotlib.backends.backend_qt5agg import NavigationToolbar2QT as NavigationToolbar
 import matplotlib.pyplot as plt
+#Vereinfachte Einstellungen für Realtime-Plot
+import matplotlib.style as mplstyle
+mplstyle.use('fast')
 
 class MplWidget(qtw.QWidget):
     def __init__(self,parent=None):
