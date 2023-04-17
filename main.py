@@ -1,10 +1,13 @@
 import sys
 from PySide6.QtWidgets import QApplication, QMainWindow
+from PySide6.QtCore import QTimer
 from mainwindow import Ui_MainWindow
 import re
 import time
+import threading
 #Geräte importieren
-from sg390 import Sg390 as sgclass
+from sg390serial import Sg390 as Sgclass
+from ke2010gpib import Ke2010 as Vmclass
 
 class MainWindow(QMainWindow):
     def __init__(self):
@@ -21,33 +24,40 @@ class MainWindow(QMainWindow):
         self.ui.pulse_toggle_pushbutton.clicked.connect(self.pulse_toggle_clicked)
         self.ui.dump_pulse_info_pushbutton.clicked.connect(self.dump_pulse_info_clicked)
         self.ui.dump_err_pushbutton.clicked.connect(self.dump_err_clicked)
+        self.ui.readout_connect_pushbutton.clicked.connect(self.readout_connect_clicked)
+
+        #Flags setzen und Timer für Aktualisierung implementieren
+        self.flag_display_voltage = False
+        self.timer = QTimer()
+        self.timer.timeout.connect(self.voltage_display)
+        self.tick_length = 100
+        self.timer.start(self.tick_length)
+        self.timestamp = time.time()
         
     #Signalgenerator verbinden
     def connect_microwave_clicked(self):
         #Inhalt aus Lineedit nehmen
         target_ip = self.ui.target_ip_line.text()
         #Prüfen ob valide IP-Adresse eingegeben wurde
-        ip_re = "[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}"
-        if re.search(ip_re,target_ip):
-            try:
-                self.sg = sgclass(target_ip)
-                sg_id = self.sg.check_connection()
-                #Bei Erfolg durchgeben
-                self.ui.output_textedit.appendPlainText("Connected to "+sg_id+" at "+target_ip)
-                #Auswahlboxen füllen
-                frequnits = self.sg.supported_frequnits
-                amplunits = self.sg.supported_amplunits
-                timeunits = self.sg.supported_timeunits
-                pulsefuncs = self.sg.supported_pulse_functions
-                self.ui.sample_units_combobox.addItems(frequnits)
-                self.ui.frequency_units_combobox.addItems(frequnits)
-                self.ui.amplitude_units_combobox.addItems(amplunits)
-                self.ui.pulse_timeunits_combobox.addItems(timeunits)
-                self.ui.pulse_function_combobox.addItems(pulsefuncs)
-            except:
-                self.ui.output_textedit.appendPlainText("Could not connect to this IP-Adress")
-        else:
-            self.ui.output_textedit.appendPlainText("Invalid IP-Adress")
+        #ip_re = "[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}"
+        #if re.search(ip_re,target_ip):
+        try:
+            self.sg = Sgclass(target_ip)
+            sg_id = self.sg.check_connection()
+            #Bei Erfolg durchgeben
+            self.ui.output_textedit.appendPlainText("Connected to "+sg_id+" at "+target_ip)
+            #Auswahlboxen füllen
+            frequnits = self.sg.supported_frequnits
+            amplunits = self.sg.supported_amplunits
+            timeunits = self.sg.supported_timeunits
+            pulsefuncs = self.sg.supported_pulse_functions
+            self.ui.sample_units_combobox.addItems(frequnits)
+            self.ui.frequency_units_combobox.addItems(frequnits)
+            self.ui.amplitude_units_combobox.addItems(amplunits)
+            self.ui.pulse_timeunits_combobox.addItems(timeunits)
+            self.ui.pulse_function_combobox.addItems(pulsefuncs)
+        except:
+            self.ui.output_textedit.appendPlainText("Could not connect to this Adress")
         
     
     #Frequenzabtastung
@@ -142,8 +152,31 @@ class MainWindow(QMainWindow):
             if errcode == False:
                 break
 
+    def readout_connect_clicked(self):
+        target = self.ui.readout_connect_line.text()
+        try:
+            self.vm = Vmclass(target)
+            vm_id = self.vm.check_connection()
+            #Bei Erfolg durchgeben
+            self.ui.output_textedit.appendPlainText("Connected to "+vm_id+" at "+target)
+            #Anfangen den aktuellen Wert des Multimeters anzuzeigen
+            self.flag_display_voltage = True
+        except:
+            self.ui.output_textedit.appendPlainText("Could not connect to this Adress")
+        
     
-#169.254.184.198
+    def voltage_display(self):
+        if self.flag_display_voltage==True:
+            new_voltage = self.vm.read_voltage()
+            #Stepdauer in ms
+            dur = self.tick_length
+            self.ui.readout_plot.push_new_value(new_voltage,dur)
+            #Messen der Plotdauer
+            newtime = time.time()
+            self.timestamp = newtime - self.timestamp
+            print(self.timestamp)
+
+#App Loop
 if __name__ == "__main__":
     app = QApplication(sys.argv)
 
