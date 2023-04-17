@@ -14,8 +14,8 @@ class Ke2010():
 
     def read_voltage(self):
         #Apply averaging filter
-        self.device.write('SENSe:VOLT:DC:AVER:COUNt 2')
-        self.device.write('SENSe:VOLT:DC:AVER:STATe ON')
+        #self.device.write('SENSe:VOLT:DC:AVER:COUNt 2')
+        #self.device.write('SENSe:VOLT:DC:AVER:STATe ON')
         #Process output to ordinary float
         tmp = self.device.query("READ?")
         #Subract string terminator
