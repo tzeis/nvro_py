@@ -9,8 +9,8 @@ import threading
 import ast
 #Geräte importieren
 from sg390serial import Sg390 as Sgclass
-from ke2010gpib import Ke2010 as Vmclass
-#from virtual_vm import Vmvirtual as Vmclass
+#from ke2010gpib import Ke2010 as Vmclass
+from virtual_vm import Vmvirtual as Vmclass
 
 class MainWindow(QMainWindow):
     def __init__(self):
@@ -205,17 +205,19 @@ class MainWindow(QMainWindow):
             elif target == "":
                 self.rfile = open("recording_"+str(time.time())+".csv","a")
                 self.flag_recording = True
+            self.record("start")
             self.info_message("Started Recording")
         elif self.flag_recording == True:
+            self.record("stop")
             self.flag_recording = False
             self.rfile.close()
             self.info_message("Stopped Recording")
 
     #Writes line to opened .csv including value, unit and a string flag for marking events
-    def record(self):
+    def record(self,tag = "0"):
         if self.flag_recording == True:
             try:
-                self.rfile.write( str(self.vm.read_voltage()) + "," + str(self.vm.read_unit()) + "," + "0" + "\n")
+                self.rfile.write( str(self.vm.read_voltage()) + "," + str(self.vm.read_unit()) + "," + str(time.time()) + "," + tag + "\n")
             except:
                 self.ui.output_textedit.append("Could not write to file")
 
