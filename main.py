@@ -1,6 +1,7 @@
 import sys
 from PySide6.QtWidgets import QApplication, QMainWindow
 from PySide6.QtCore import QTimer
+from PySide6.QtGui import QColor
 from mainwindow import Ui_MainWindow
 import re
 import time
@@ -45,7 +46,6 @@ class MainWindow(QMainWindow):
         #Vorfüllen der Verbindungen aus connectioncache Datei
         prev_conn_cache = open("connectioncache","r+")
         prev_conn = ast.literal_eval(prev_conn_cache.read())
-        print(prev_conn)
         if prev_conn["sg"]!="":
             self.ui.target_ip_line.setText(prev_conn["sg"])
         if prev_conn["ro"]!="":
@@ -60,7 +60,7 @@ class MainWindow(QMainWindow):
             self.sg = Sgclass(target_ip)
             sg_id = self.sg.check_connection()
             #Bei Erfolg durchgeben
-            self.ui.output_textedit.append("Connected to "+sg_id+" at "+target_ip)
+            self.info_message("Connected to "+sg_id+" at "+target_ip)
             #Auswahlboxen füllen
             frequnits = self.sg.supported_frequnits
             amplunits = self.sg.supported_amplunits
@@ -72,7 +72,7 @@ class MainWindow(QMainWindow):
             self.ui.pulse_timeunits_combobox.addItems(timeunits)
             self.ui.pulse_function_combobox.addItems(pulsefuncs)
         except:
-            self.ui.output_textedit.append("Could not connect to this Adress")
+            self.warning_message("Could not connect to this adress")
         
     
     #Frequenzabtastung
@@ -98,13 +98,13 @@ class MainWindow(QMainWindow):
                             j+=1
                             self.ui.sampler_progress.setValue(100*j/len(target_freqs))
                     else:
-                        self.ui.output_textedit.append("Stepsize must be smaller than Sample width") 
+                        self.warning_message("Stepsize must be smaller than Sample width") 
                 else:
-                    self.ui.output_textedit.append("Upper Bound must be higher than lower Bound")                 
+                    self.warning_message("Upper Bound must be higher than lower Bound")                 
             else:
-                self.ui.output_textedit.append("Invalid Frequency Format: Enter Frequency as Integer or Float")
+                self.warning_message("Invalid Frequency Format: Enter Frequency as Integer or Float")
         else:
-            self.ui.output_textedit.append("Units must be specified")
+            self.warning_message("Units must be specified")
 
     #Schnelleinstellungen
 
@@ -121,25 +121,25 @@ class MainWindow(QMainWindow):
                     self.sg.set_amplitude(target_ampl,ampl_unit)
                     self.sg.set_frequency(target_freq,freq_unit)
                 except:
-                    self.ui.output_textedit.append("Could not apply these Settings to Device")
+                    self.error_message("Could not apply these Settings to Device")
             else:
-                self.ui.output_textedit.append("Invalid Settings Format: Enter as Integer or Float")
+                self.warning_message("Invalid Settings Format: Enter as Integer or Float")
         else:
-            self.ui.output_textedit.append("Units must be specified")
+            self.warning_message("Units must be specified")
 
     def dump_signal_settings_clicked(self):
         try:
             sg_id = self.sg.check_connection()
         except:
-            self.ui.output_textedit.append("Did not receive Response from Device, try reconnecting")
+            self.error_message("Did not receive Response from Device, try reconnecting")
             return
         sg_freq = self.sg.get_frequency()
         sg_ampl = self.sg.get_amplitude()
         sg_modul = self.sg.get_modulation_status()
-        self.ui.output_textedit.append("Device Id: "+sg_id)
-        self.ui.output_textedit.append("Frequency: "+sg_freq+"Hz")
-        self.ui.output_textedit.append("Amplitude: "+sg_ampl+"dBm")
-        self.ui.output_textedit.append("Modulation: "+str(sg_modul))
+        self.info_message("Device Id: "+sg_id)
+        self.info_message("Frequency: "+sg_freq+"Hz")
+        self.info_message("Amplitude: "+sg_ampl+"dBm")
+        self.info_message("Modulation: "+str(sg_modul))
 
     def pulse_toggle_clicked(self):
         pfunc = self.ui.pulse_function_combobox.currentText()
@@ -154,9 +154,9 @@ class MainWindow(QMainWindow):
                 self.sg.set_pulse_width(pwid,punit)
                 self.sg.switch_pulsed_status()
             except:
-                self.ui.output_textedit.append("Could not apply these Settings to Device")
+                self.error_message("Could not apply these Settings to Device")
         else:
-            self.ui.output_textedit.append("Invalid period settings format")
+            self.warning_message("Invalid period settings format")
 
     def dump_pulse_info_clicked(self):
         pper = self.sg.get_pulse_period("us")
@@ -178,11 +178,11 @@ class MainWindow(QMainWindow):
             self.vm = Vmclass(target)
             vm_id = self.vm.check_connection()
             #Bei Erfolg durchgeben
-            self.ui.output_textedit.append("Connected to "+vm_id+" at "+target)
+            self.info_message("Connected to "+vm_id+" at "+target)
             #Anfangen den aktuellen Wert des Multimeters anzuzeigen
             self.flag_display_voltage = True
         except:
-            self.ui.output_textedit.append("Could not connect to this Adress")
+            self.error_message("Could not connect to this Adress")
         
     
     def voltage_display(self):
@@ -205,9 +205,11 @@ class MainWindow(QMainWindow):
             elif target == "":
                 self.rfile = open("recording_"+str(time.time())+".csv","a")
                 self.flag_recording = True
+            self.info_message("Started Recording")
         elif self.flag_recording == True:
             self.flag_recording = False
             self.rfile.close()
+            self.info_message("Stopped Recording")
 
     #Writes line to opened .csv including value, unit and a string flag for marking events
     def record(self):
@@ -216,6 +218,16 @@ class MainWindow(QMainWindow):
                 self.rfile.write( str(self.vm.read_voltage()) + "," + str(self.vm.read_unit()) + "," + "0" + "\n")
             except:
                 self.ui.output_textedit.append("Could not write to file")
+
+    def info_message(self,message):
+        self.ui.output_textedit.setTextColor(QColor(0,255,255))      
+        self.ui.output_textedit.append(message)
+    def warning_message(self,message):
+        self.ui.output_textedit.setTextColor(QColor(255,255,0))      
+        self.ui.output_textedit.append(message)
+    def error_message(self,message):
+        self.ui.output_textedit.setTextColor(QColor(255,0,0))      
+        self.ui.output_textedit.append(message)    
 
 #App Loop
 if __name__ == "__main__":
