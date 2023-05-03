@@ -8,7 +8,8 @@ import threading
 import ast
 #Geräte importieren
 from sg390serial import Sg390 as Sgclass
-from ke2010gpib import Ke2010 as Vmclass
+#from ke2010gpib import Ke2010 as Vmclass
+from virtual_vm import Vmvirtual as Vmclass
 
 class MainWindow(QMainWindow):
     def __init__(self):
