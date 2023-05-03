@@ -33,7 +33,7 @@ class MainWindow(QMainWindow):
         self.flag_recording = False
         self.timer = QTimer()
         self.timer.timeout.connect(self.voltage_display)
-        self.timer.timeout.connect(self.record(0))
+        self.timer.timeout.connect(self.record)
         self.tick_length = 200
         self.timer.start(self.tick_length)
         self.timestamp = time.time()
@@ -207,13 +207,12 @@ class MainWindow(QMainWindow):
         elif self.flag_recording == True:
             self.flag_recording = False
             self.rfile.close()
-            print("Test 1")
 
     #Writes line to opened .csv including value, unit and a string flag for marking events
-    def record(self,flag):
+    def record(self):
         if self.flag_recording == True:
             try:
-                self.record.write( str(self.vm.read_voltage()) + "," + vm.read_unit() + "," + str(flag) + "\n")
+                self.rfile.write( str(self.vm.read_voltage()) + "," + str(self.vm.read_unit()) + "," + "0" + "\n")
             except:
                 self.ui.output_textedit.append("Could not write to file")
 

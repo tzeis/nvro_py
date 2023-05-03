@@ -135,7 +135,7 @@
         <item>
          <widget class="QPushButton" name="toggle_recording_pushbutton">
           <property name="text">
-           <string>Start Recording</string>
+           <string>Toggle Recording</string>
           </property>
          </widget>
         </item>

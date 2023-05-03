@@ -323,7 +323,7 @@ class Ui_MainWindow(object):
         self.readout_connect_pushbutton.setText(QCoreApplication.translate("MainWindow", u"Connect", None))
         self.laser_label.setText(QCoreApplication.translate("MainWindow", u"Recording", None))
         self.record_target_line.setPlaceholderText(QCoreApplication.translate("MainWindow", u"Filename", None))
-        self.toggle_recording_pushbutton.setText(QCoreApplication.translate("MainWindow", u"Start Recording", None))
+        self.toggle_recording_pushbutton.setText(QCoreApplication.translate("MainWindow", u"Toggle Recording", None))
         self.tag_text_line.setPlaceholderText(QCoreApplication.translate("MainWindow", u"Tag Text", None))
         self.tag_event_pushbutton.setText(QCoreApplication.translate("MainWindow", u"Tag Event", None))
         self.pulse_label.setText(QCoreApplication.translate("MainWindow", u"Pulse Modulation Settings", None))
