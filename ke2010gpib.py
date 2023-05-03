@@ -23,3 +23,7 @@ class Ke2010():
         tmparr = re.split("E",tmp)
         tmp = float(tmparr[0])*10**(int(tmparr[1]))
         return tmp
+
+    #Implementieren
+    def read_unit(self):
+        return "arb.u."

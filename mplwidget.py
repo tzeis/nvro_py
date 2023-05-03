@@ -26,6 +26,9 @@ class MplWidget(qtw.QWidget):
         self.xrange = 10000
         self.x = list(range(0,self.xrange))
         self.y = list(np.repeat(0,self.xrange))
+        #Initialize arbitrary units
+        self.xunit = "arb.u."
+        self.yunit = "arb.u"
         
         self.refresh()
         
@@ -40,6 +43,7 @@ class MplWidget(qtw.QWidget):
         plt.cla()
         #self.ax.set_ylim([-1,3])
         self.ax.plot(self.x,self.y)
+        self.change_units(self.xunit,self.yunit)
         self.canvas.draw()  
 
     #Remaps last dur values of x to y = val and refreshes canvas
@@ -48,5 +52,12 @@ class MplWidget(qtw.QWidget):
         tmpy = self.y+newy
         self.y = tmpy[dur:self.xrange+dur]
         self.refresh()
-        
+
+    #Change axis units
+    def change_units(self,xunit,yunit):
+        #Stores inputs locally
+        self.xunit = xunit
+        self.yunit = yunit
+        self.ax.set_xlabel("Time["+self.xunit+"]")
+        self.ax.set_ylabel("Amplitude["+self.yunit+"]")
 

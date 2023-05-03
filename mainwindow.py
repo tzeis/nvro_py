@@ -15,10 +15,10 @@ from PySide6.QtGui import (QBrush, QColor, QConicalGradient, QCursor,
     QFont, QFontDatabase, QGradient, QIcon,
     QImage, QKeySequence, QLinearGradient, QPainter,
     QPalette, QPixmap, QRadialGradient, QTransform)
-from PySide6.QtWidgets import (QApplication, QComboBox, QDoubleSpinBox, QGridLayout,
+from PySide6.QtWidgets import (QApplication, QComboBox, QFrame, QGridLayout,
     QHBoxLayout, QLabel, QLayout, QLineEdit,
-    QMainWindow, QPlainTextEdit, QProgressBar, QPushButton,
-    QSizePolicy, QWidget)
+    QMainWindow, QProgressBar, QPushButton, QSizePolicy,
+    QTextEdit, QWidget)
 
 from mplwidget import MplWidget
 
@@ -26,7 +26,7 @@ class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
         if not MainWindow.objectName():
             MainWindow.setObjectName(u"MainWindow")
-        MainWindow.resize(1280, 720)
+        MainWindow.resize(1280, 762)
         sizePolicy = QSizePolicy(QSizePolicy.Expanding, QSizePolicy.Expanding)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
@@ -44,23 +44,18 @@ class Ui_MainWindow(object):
         self.readout_grid = QGridLayout()
         self.readout_grid.setObjectName(u"readout_grid")
         self.readout_grid.setSizeConstraint(QLayout.SetDefaultConstraint)
-        self.readout_voltage_label = QLabel(self.centralwidget)
-        self.readout_voltage_label.setObjectName(u"readout_voltage_label")
-        font = QFont()
-        font.setPointSize(14)
-        self.readout_voltage_label.setFont(font)
-
-        self.readout_grid.addWidget(self.readout_voltage_label, 3, 0, 1, 1)
-
-        self.doubleSpinBox = QDoubleSpinBox(self.centralwidget)
-        self.doubleSpinBox.setObjectName(u"doubleSpinBox")
-
-        self.readout_grid.addWidget(self.doubleSpinBox, 5, 0, 1, 1)
-
         self.readout_connect_line = QLineEdit(self.centralwidget)
         self.readout_connect_line.setObjectName(u"readout_connect_line")
 
         self.readout_grid.addWidget(self.readout_connect_line, 2, 0, 1, 1)
+
+        self.readout_voltage_line = QLineEdit(self.centralwidget)
+        self.readout_voltage_line.setObjectName(u"readout_voltage_line")
+        font = QFont()
+        font.setPointSize(14)
+        self.readout_voltage_line.setFont(font)
+
+        self.readout_grid.addWidget(self.readout_voltage_line, 3, 1, 1, 1)
 
         self.readout_label = QLabel(self.centralwidget)
         self.readout_label.setObjectName(u"readout_label")
@@ -71,24 +66,11 @@ class Ui_MainWindow(object):
 
         self.readout_grid.addWidget(self.readout_label, 0, 0, 1, 2)
 
-        self.laser_label = QLabel(self.centralwidget)
-        self.laser_label.setObjectName(u"laser_label")
-        self.laser_label.setFont(font1)
-        self.laser_label.setAlignment(Qt.AlignCenter)
+        self.readout_voltage_label = QLabel(self.centralwidget)
+        self.readout_voltage_label.setObjectName(u"readout_voltage_label")
+        self.readout_voltage_label.setFont(font)
 
-        self.readout_grid.addWidget(self.laser_label, 4, 0, 1, 2)
-
-        self.laser_intensity_label = QLabel(self.centralwidget)
-        self.laser_intensity_label.setObjectName(u"laser_intensity_label")
-        self.laser_intensity_label.setFont(font)
-
-        self.readout_grid.addWidget(self.laser_intensity_label, 5, 1, 1, 1)
-
-        self.readout_voltage_line = QLineEdit(self.centralwidget)
-        self.readout_voltage_line.setObjectName(u"readout_voltage_line")
-        self.readout_voltage_line.setFont(font)
-
-        self.readout_grid.addWidget(self.readout_voltage_line, 3, 1, 1, 1)
+        self.readout_grid.addWidget(self.readout_voltage_label, 3, 0, 1, 1)
 
         self.readout_connect_pushbutton = QPushButton(self.centralwidget)
         self.readout_connect_pushbutton.setObjectName(u"readout_connect_pushbutton")
@@ -100,6 +82,48 @@ class Ui_MainWindow(object):
         self.readout_plot.setMinimumSize(QSize(640, 480))
 
         self.readout_grid.addWidget(self.readout_plot, 1, 0, 1, 2)
+
+        self.laser_label = QLabel(self.centralwidget)
+        self.laser_label.setObjectName(u"laser_label")
+        self.laser_label.setFont(font1)
+        self.laser_label.setAlignment(Qt.AlignCenter)
+
+        self.readout_grid.addWidget(self.laser_label, 4, 0, 1, 2)
+
+        self.recording_layout = QHBoxLayout()
+        self.recording_layout.setObjectName(u"recording_layout")
+        self.recordin_status_text = QTextEdit(self.centralwidget)
+        self.recordin_status_text.setObjectName(u"recordin_status_text")
+#if QT_CONFIG(tooltip)
+        self.recordin_status_text.setToolTip(u"")
+#endif // QT_CONFIG(tooltip)
+        self.recordin_status_text.setFrameShape(QFrame.StyledPanel)
+        self.recordin_status_text.setReadOnly(True)
+
+        self.recording_layout.addWidget(self.recordin_status_text)
+
+        self.record_target_line = QLineEdit(self.centralwidget)
+        self.record_target_line.setObjectName(u"record_target_line")
+
+        self.recording_layout.addWidget(self.record_target_line)
+
+        self.toggle_recording_pushbutton = QPushButton(self.centralwidget)
+        self.toggle_recording_pushbutton.setObjectName(u"toggle_recording_pushbutton")
+
+        self.recording_layout.addWidget(self.toggle_recording_pushbutton)
+
+        self.tag_text_line = QLineEdit(self.centralwidget)
+        self.tag_text_line.setObjectName(u"tag_text_line")
+
+        self.recording_layout.addWidget(self.tag_text_line)
+
+        self.tag_event_pushbutton = QPushButton(self.centralwidget)
+        self.tag_event_pushbutton.setObjectName(u"tag_event_pushbutton")
+
+        self.recording_layout.addWidget(self.tag_event_pushbutton)
+
+
+        self.readout_grid.addLayout(self.recording_layout, 5, 0, 1, 2)
 
 
         self.horizontalLayout.addLayout(self.readout_grid)
@@ -116,6 +140,9 @@ class Ui_MainWindow(object):
 
         self.target_ip_line = QLineEdit(self.centralwidget)
         self.target_ip_line.setObjectName(u"target_ip_line")
+#if QT_CONFIG(tooltip)
+        self.target_ip_line.setToolTip(u"")
+#endif // QT_CONFIG(tooltip)
 
         self.signal_grid.addWidget(self.target_ip_line, 2, 0, 1, 3)
 
@@ -123,11 +150,6 @@ class Ui_MainWindow(object):
         self.pulse_function_combobox.setObjectName(u"pulse_function_combobox")
 
         self.signal_grid.addWidget(self.pulse_function_combobox, 11, 0, 1, 1)
-
-        self.output_textedit = QPlainTextEdit(self.centralwidget)
-        self.output_textedit.setObjectName(u"output_textedit")
-
-        self.signal_grid.addWidget(self.output_textedit, 15, 0, 1, 4)
 
         self.dump_err_pushbutton = QPushButton(self.centralwidget)
         self.dump_err_pushbutton.setObjectName(u"dump_err_pushbutton")
@@ -274,6 +296,11 @@ class Ui_MainWindow(object):
 
         self.signal_grid.addWidget(self.signal_quickedit_label, 8, 0, 1, 4)
 
+        self.output_textedit = QTextEdit(self.centralwidget)
+        self.output_textedit.setObjectName(u"output_textedit")
+
+        self.signal_grid.addWidget(self.output_textedit, 15, 0, 1, 4)
+
 
         self.horizontalLayout.addLayout(self.signal_grid)
 
@@ -289,13 +316,16 @@ class Ui_MainWindow(object):
 
     def retranslateUi(self, MainWindow):
         MainWindow.setWindowTitle(QCoreApplication.translate("MainWindow", u"MainWindow", None))
-        self.readout_voltage_label.setText(QCoreApplication.translate("MainWindow", u"Current Value:", None))
         self.readout_connect_line.setPlaceholderText(QCoreApplication.translate("MainWindow", u"Target GPIB Adress", None))
-        self.readout_label.setText(QCoreApplication.translate("MainWindow", u"Intensity Readout", None))
-        self.laser_label.setText(QCoreApplication.translate("MainWindow", u"Laser Settings", None))
-        self.laser_intensity_label.setText(QCoreApplication.translate("MainWindow", u"Intensity", None))
         self.readout_voltage_line.setPlaceholderText(QCoreApplication.translate("MainWindow", u"Not Connected", None))
+        self.readout_label.setText(QCoreApplication.translate("MainWindow", u"Intensity Readout", None))
+        self.readout_voltage_label.setText(QCoreApplication.translate("MainWindow", u"Current Value:", None))
         self.readout_connect_pushbutton.setText(QCoreApplication.translate("MainWindow", u"Connect", None))
+        self.laser_label.setText(QCoreApplication.translate("MainWindow", u"Recording", None))
+        self.record_target_line.setPlaceholderText(QCoreApplication.translate("MainWindow", u"Filename", None))
+        self.toggle_recording_pushbutton.setText(QCoreApplication.translate("MainWindow", u"Start Recording", None))
+        self.tag_text_line.setPlaceholderText(QCoreApplication.translate("MainWindow", u"Tag Text", None))
+        self.tag_event_pushbutton.setText(QCoreApplication.translate("MainWindow", u"Tag Event", None))
         self.pulse_label.setText(QCoreApplication.translate("MainWindow", u"Pulse Modulation Settings", None))
         self.target_ip_line.setText("")
         self.target_ip_line.setPlaceholderText(QCoreApplication.translate("MainWindow", u"Target Adress", None))
