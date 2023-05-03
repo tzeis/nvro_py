@@ -177,7 +177,7 @@ class MainWindow(QMainWindow):
             self.vm = Vmclass(target)
             vm_id = self.vm.check_connection()
             #Bei Erfolg durchgeben
-            self.ui.output_textedit.appendText("Connected to "+vm_id+" at "+target)
+            self.ui.output_textedit.append("Connected to "+vm_id+" at "+target)
             #Anfangen den aktuellen Wert des Multimeters anzuzeigen
             self.flag_display_voltage = True
         except:
