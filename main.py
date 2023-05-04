@@ -9,8 +9,8 @@ import threading
 import ast
 #Geräte importieren
 from sg390serial import Sg390 as Sgclass
-#from ke2010gpib import Ke2010 as Vmclass
-from virtual_vm import Vmvirtual as Vmclass
+from ke2010gpib import Ke2010 as Vmclass
+#from virtual_vm import Vmvirtual as Vmclass
 
 class MainWindow(QMainWindow):
     def __init__(self):
@@ -29,6 +29,7 @@ class MainWindow(QMainWindow):
         self.ui.dump_err_pushbutton.clicked.connect(self.dump_err_clicked)
         self.ui.readout_connect_pushbutton.clicked.connect(self.readout_connect_clicked)
         self.ui.toggle_recording_pushbutton.clicked.connect(self.toggle_recording_clicked)
+        self.ui.tag_event_pushbutton.clicked.connect(self.tag_event)
 
         #Flags setzen und Timer für Aktualisierung implementieren
         self.flag_display_voltage = False
@@ -220,6 +221,13 @@ class MainWindow(QMainWindow):
                 self.rfile.write( str(self.vm.read_voltage()) + "," + str(self.vm.read_unit()) + "," + str(time.time()) + "," + tag + "\n")
             except:
                 self.ui.output_textedit.append("Could not write to file")
+
+    def tag_event(self):
+        try:
+            self.record(str(self.ui.tag_text_line.text()))
+            self.info_message("Event tagged as " + str(self.ui.tag_text_line.text()))
+        except:
+            self.error_message("Could not tag event")
 
     def info_message(self,message):
         self.ui.output_textedit.setTextColor(QColor(0,255,255))      
