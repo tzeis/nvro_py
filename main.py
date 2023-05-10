@@ -10,6 +10,7 @@ import ast
 #Geräte importieren
 from sg390serial import Sg390 as Sgclass
 from ke2010gpib import Ke2010 as Vmclass
+from pulseblaster_esrpro import PulseBlasterEsrpro as Pbclass
 #from virtual_vm import Vmvirtual as Vmclass
 
 class MainWindow(QMainWindow):
@@ -30,6 +31,10 @@ class MainWindow(QMainWindow):
         self.ui.readout_connect_pushbutton.clicked.connect(self.readout_connect_clicked)
         self.ui.toggle_recording_pushbutton.clicked.connect(self.toggle_recording_clicked)
         self.ui.tag_event_pushbutton.clicked.connect(self.tag_event)
+        #Externer PulseBlaster Signalgenerator
+        self.ui.external_pulse_radiobutton.toggled.connect(self.toggle_external_pulse)
+        self.ui.external_start_pushbutton.clicked.connect(self.external_start_clicked)
+        self.ui.external_stop_pushbutton.clicked.connect(self.external_stop_clicked)
 
         #Flags setzen und Timer für Aktualisierung implementieren
         self.flag_display_voltage = False
@@ -228,6 +233,32 @@ class MainWindow(QMainWindow):
             self.info_message("Event tagged as " + str(self.ui.tag_text_line.text()))
         except:
             self.error_message("Could not tag event")
+
+    def toggle_external_pulse(self):
+        state = self.ui.external_pulse_radiobutton.isChecked()
+        if state == True:
+            self.pb = Pbclass()
+            self.pb.check_connection()
+        elif state == False:
+            self.pb.disconnect()
+
+    def external_start_clicked(self):
+        if self.pb.is_running() == True:
+            self.warning_message("PulseBlaster already running, try stopping it before running new Program")
+        elif self.pb.is_running() == False:
+            self.pb.program()
+            self.pb.start()
+            self.info_message("PulseBlaster executing program")
+            
+    def external_stop_clicked(self):
+        if self.pb.is_running() == True:
+            self.pb.stop()
+            self.info_message("PulseBlaster stopped")
+        elif self.pb.is_running() == False:
+            self.warning_message("PulseBlaster already stopped")
+            
+        
+    
 
     def info_message(self,message):
         self.ui.output_textedit.setTextColor(QColor(0,255,255))      
