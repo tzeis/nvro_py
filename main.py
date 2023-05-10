@@ -238,9 +238,10 @@ class MainWindow(QMainWindow):
         state = self.ui.external_pulse_radiobutton.isChecked()
         if state == True:
             self.pb = Pbclass()
-            self.pb.check_connection()
+            self.info_message(self.pb.check_connection())
         elif state == False:
             self.pb.disconnect()
+            self.info_message("Disconnected from Pulse Blaster")
 
     def external_start_clicked(self):
         if self.pb.is_running() == True:

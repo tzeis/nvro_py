@@ -21,8 +21,8 @@ class PulseBlasterEsrpro():
     def program(self,program):
         pb_start_programming(PULSE_PROGRAM)
         #Programmbeginn
-        start = pb_inst(0b000000000000000000000000,Inst.CONTINUE,0,200.0*ms)
-        pb_inst(0b111111111111111111111111,Inst.BRANCH,start,200.0*ms)
+        start = pb_inst_pbonly(0b000000000000000000000000,Inst.CONTINUE,0,200.0*ms)
+        pb_inst_pbonly(0b111111111111111111111111,Inst.BRANCH,start,200.0*ms)
         #Programmende
         pb_stop_programming()
 
