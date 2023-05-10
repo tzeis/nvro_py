@@ -162,15 +162,104 @@
       <property name="horizontalSpacing">
        <number>0</number>
       </property>
-      <item row="10" column="0" colspan="4">
-       <widget class="QLabel" name="pulse_label">
+      <item row="14" column="0">
+       <widget class="QPushButton" name="dump_signal_setting_pushbutton">
+        <property name="text">
+         <string>Dump device Settings</string>
+        </property>
+       </widget>
+      </item>
+      <item row="14" column="1">
+       <widget class="QPushButton" name="dump_err_pushbutton">
+        <property name="text">
+         <string>Dump Device Errors</string>
+        </property>
+       </widget>
+      </item>
+      <item row="6" column="1">
+       <widget class="QLineEdit" name="to_frequency_line">
+        <property name="text">
+         <string/>
+        </property>
+        <property name="placeholderText">
+         <string>To</string>
+        </property>
+       </widget>
+      </item>
+      <item row="20" column="0" colspan="4">
+       <widget class="QTextEdit" name="output_textedit"/>
+      </item>
+      <item row="19" column="0" colspan="4">
+       <widget class="QLabel" name="output_label">
+        <property name="font">
+         <font>
+          <pointsize>20</pointsize>
+         </font>
+        </property>
+        <property name="text">
+         <string>Output Console</string>
+        </property>
+        <property name="alignment">
+         <set>Qt::AlignCenter</set>
+        </property>
+       </widget>
+      </item>
+      <item row="9" column="1">
+       <layout class="QHBoxLayout" name="signal_frequency_layout">
+        <item>
+         <widget class="QLineEdit" name="signal_frequency_line">
+          <property name="placeholderText">
+           <string>Frequency</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QComboBox" name="frequency_units_combobox">
+          <property name="placeholderText">
+           <string>Units</string>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </item>
+      <item row="15" column="0" colspan="4">
+       <widget class="QLabel" name="external_modulation_label">
         <property name="font">
          <font>
           <pointsize>14</pointsize>
          </font>
         </property>
         <property name="text">
-         <string>Pulse Modulation Settings</string>
+         <string>External Pulse Modulation Settings</string>
+        </property>
+        <property name="alignment">
+         <set>Qt::AlignCenter</set>
+        </property>
+       </widget>
+      </item>
+      <item row="11" column="0">
+       <widget class="QComboBox" name="pulse_function_combobox">
+        <property name="placeholderText">
+         <string>Pulse Function</string>
+        </property>
+       </widget>
+      </item>
+      <item row="6" column="0">
+       <widget class="QLineEdit" name="from_frequency_line">
+        <property name="placeholderText">
+         <string notr="true">From</string>
+        </property>
+       </widget>
+      </item>
+      <item row="4" column="0" colspan="4">
+       <widget class="QLabel" name="frequency_sampler_label">
+        <property name="font">
+         <font>
+          <pointsize>14</pointsize>
+         </font>
+        </property>
+        <property name="text">
+         <string>Frequency Sampler</string>
         </property>
         <property name="alignment">
          <set>Qt::AlignCenter</set>
@@ -190,119 +279,10 @@
         </property>
        </widget>
       </item>
-      <item row="11" column="0">
-       <widget class="QComboBox" name="pulse_function_combobox">
-        <property name="placeholderText">
-         <string>Pulse Function</string>
-        </property>
-       </widget>
-      </item>
-      <item row="13" column="1">
-       <widget class="QPushButton" name="dump_err_pushbutton">
-        <property name="text">
-         <string>Dump Device Errors</string>
-        </property>
-       </widget>
-      </item>
-      <item row="11" column="3">
-       <widget class="QPushButton" name="pulse_toggle_pushbutton">
-        <property name="text">
-         <string>Toggle Pulse</string>
-        </property>
-       </widget>
-      </item>
-      <item row="7" column="3">
-       <widget class="QPushButton" name="sample_frequency_pushbutton">
-        <property name="text">
-         <string>Sample</string>
-        </property>
-       </widget>
-      </item>
       <item row="7" column="0" colspan="3">
        <widget class="QProgressBar" name="sampler_progress">
         <property name="value">
          <number>0</number>
-        </property>
-       </widget>
-      </item>
-      <item row="4" column="0" colspan="4">
-       <widget class="QLabel" name="frequency_sampler_label">
-        <property name="font">
-         <font>
-          <pointsize>14</pointsize>
-         </font>
-        </property>
-        <property name="text">
-         <string>Frequency Sampler</string>
-        </property>
-        <property name="alignment">
-         <set>Qt::AlignCenter</set>
-        </property>
-       </widget>
-      </item>
-      <item row="9" column="0">
-       <layout class="QHBoxLayout" name="signal_amplitude_layout">
-        <item>
-         <widget class="QLineEdit" name="signal_amplitude_line">
-          <property name="placeholderText">
-           <string>Amplitude</string>
-          </property>
-         </widget>
-        </item>
-        <item>
-         <widget class="QComboBox" name="amplitude_units_combobox">
-          <property name="placeholderText">
-           <string>Units</string>
-          </property>
-         </widget>
-        </item>
-       </layout>
-      </item>
-      <item row="13" column="0">
-       <widget class="QPushButton" name="dump_signal_setting_pushbutton">
-        <property name="text">
-         <string>Dump device Settings</string>
-        </property>
-       </widget>
-      </item>
-      <item row="6" column="1">
-       <widget class="QLineEdit" name="to_frequency_line">
-        <property name="text">
-         <string/>
-        </property>
-        <property name="placeholderText">
-         <string>To</string>
-        </property>
-       </widget>
-      </item>
-      <item row="6" column="3">
-       <widget class="QComboBox" name="sample_units_combobox">
-        <property name="currentIndex">
-         <number>-1</number>
-        </property>
-        <property name="placeholderText">
-         <string>Units</string>
-        </property>
-       </widget>
-      </item>
-      <item row="6" column="2">
-       <widget class="QLineEdit" name="stepsize_frequency_line">
-        <property name="placeholderText">
-         <string>Step Size</string>
-        </property>
-       </widget>
-      </item>
-      <item row="13" column="3">
-       <widget class="QPushButton" name="dump_pulse_info_pushbutton">
-        <property name="text">
-         <string>Dump Pulse Info</string>
-        </property>
-       </widget>
-      </item>
-      <item row="6" column="0">
-       <widget class="QLineEdit" name="from_frequency_line">
-        <property name="placeholderText">
-         <string notr="true">From</string>
         </property>
        </widget>
       </item>
@@ -323,10 +303,49 @@
         </property>
        </widget>
       </item>
-      <item row="9" column="3">
-       <widget class="QPushButton" name="signal_setting_pushbutton">
+      <item row="6" column="2">
+       <widget class="QLineEdit" name="stepsize_frequency_line">
+        <property name="placeholderText">
+         <string>Step Size</string>
+        </property>
+       </widget>
+      </item>
+      <item row="10" column="0" colspan="4">
+       <widget class="QLabel" name="pulse_label">
+        <property name="font">
+         <font>
+          <pointsize>14</pointsize>
+         </font>
+        </property>
         <property name="text">
-         <string>Apply</string>
+         <string>Internal Pulse Modulation Settings</string>
+        </property>
+        <property name="alignment">
+         <set>Qt::AlignCenter</set>
+        </property>
+       </widget>
+      </item>
+      <item row="6" column="3">
+       <widget class="QComboBox" name="sample_units_combobox">
+        <property name="currentIndex">
+         <number>-1</number>
+        </property>
+        <property name="placeholderText">
+         <string>Units</string>
+        </property>
+       </widget>
+      </item>
+      <item row="11" column="3">
+       <widget class="QPushButton" name="pulse_toggle_pushbutton">
+        <property name="text">
+         <string>Toggle Pulse</string>
+        </property>
+       </widget>
+      </item>
+      <item row="14" column="3">
+       <widget class="QPushButton" name="dump_pulse_info_pushbutton">
+        <property name="text">
+         <string>Dump Pulse Info</string>
         </property>
        </widget>
       </item>
@@ -351,45 +370,30 @@
         </item>
        </layout>
       </item>
-      <item row="2" column="3">
-       <widget class="QPushButton" name="try_ip_pushbutton">
+      <item row="9" column="3">
+       <widget class="QPushButton" name="signal_setting_pushbutton">
         <property name="text">
-         <string>Connect</string>
+         <string>Apply</string>
         </property>
        </widget>
       </item>
-      <item row="9" column="1">
-       <layout class="QHBoxLayout" name="signal_frequency_layout">
+      <item row="9" column="0">
+       <layout class="QHBoxLayout" name="signal_amplitude_layout">
         <item>
-         <widget class="QLineEdit" name="signal_frequency_line">
+         <widget class="QLineEdit" name="signal_amplitude_line">
           <property name="placeholderText">
-           <string>Frequency</string>
+           <string>Amplitude</string>
           </property>
          </widget>
         </item>
         <item>
-         <widget class="QComboBox" name="frequency_units_combobox">
+         <widget class="QComboBox" name="amplitude_units_combobox">
           <property name="placeholderText">
            <string>Units</string>
           </property>
          </widget>
         </item>
        </layout>
-      </item>
-      <item row="14" column="0" colspan="4">
-       <widget class="QLabel" name="outpu_label">
-        <property name="font">
-         <font>
-          <pointsize>20</pointsize>
-         </font>
-        </property>
-        <property name="text">
-         <string>Output Console</string>
-        </property>
-        <property name="alignment">
-         <set>Qt::AlignCenter</set>
-        </property>
-       </widget>
       </item>
       <item row="8" column="0" colspan="4">
        <widget class="QLabel" name="signal_quickedit_label">
@@ -406,8 +410,40 @@
         </property>
        </widget>
       </item>
-      <item row="15" column="0" colspan="4">
-       <widget class="QTextEdit" name="output_textedit"/>
+      <item row="2" column="3">
+       <widget class="QPushButton" name="try_ip_pushbutton">
+        <property name="text">
+         <string>Connect</string>
+        </property>
+       </widget>
+      </item>
+      <item row="7" column="3">
+       <widget class="QPushButton" name="sample_frequency_pushbutton">
+        <property name="text">
+         <string>Sample</string>
+        </property>
+       </widget>
+      </item>
+      <item row="17" column="2">
+       <widget class="QPushButton" name="external_start_pushbutton">
+        <property name="text">
+         <string>Start</string>
+        </property>
+       </widget>
+      </item>
+      <item row="17" column="3">
+       <widget class="QPushButton" name="external_stop_pushbutton">
+        <property name="text">
+         <string>Stop</string>
+        </property>
+       </widget>
+      </item>
+      <item row="17" column="0" colspan="2">
+       <widget class="QComboBox" name="external_modulation_combobox">
+        <property name="placeholderText">
+         <string>External Modulation Program</string>
+        </property>
+       </widget>
       </item>
      </layout>
     </item>
