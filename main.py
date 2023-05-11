@@ -7,6 +7,7 @@ import re
 import time
 import threading
 import ast
+import os
 #Geräte importieren
 from sg390serial import Sg390 as Sgclass
 from ke2010gpib import Ke2010 as Vmclass
@@ -35,6 +36,11 @@ class MainWindow(QMainWindow):
         self.ui.external_pulse_radiobutton.toggled.connect(self.toggle_external_pulse)
         self.ui.external_start_pushbutton.clicked.connect(self.external_start_clicked)
         self.ui.external_stop_pushbutton.clicked.connect(self.external_stop_clicked)
+        #Combobox mit auswählbaren PulseBlasterProgrammen füllen
+        self.pb_program_path = os.path.join(os.getcwd(),"pulse_blaster_programs")
+        self.pb_programs = os.listdir(self.pb_program_path)
+        self.ui.external_modulation_combobox.addItems(self.pb_programs)
+        
 
         #Flags setzen und Timer für Aktualisierung implementieren
         self.flag_display_voltage = False
@@ -247,7 +253,10 @@ class MainWindow(QMainWindow):
         if self.pb.is_running() == True:
             self.warning_message("PulseBlaster already running, try stopping it before running new Program")
         elif self.pb.is_running() == False:
-            self.pb.program()
+            programfile = open(os.path.join(self.pb_program_path,self.ui.external_modulation_combobox.currentText()),"r")
+            program = programfile.read()
+            programfile.close()
+            self.pb.program(program)
             self.pb.start()
             self.info_message("PulseBlaster executing program")
             

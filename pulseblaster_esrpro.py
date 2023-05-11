@@ -1,5 +1,6 @@
 from spinapi import *
 import re
+import ast
 
 class PulseBlasterEsrpro():
 
@@ -21,8 +22,11 @@ class PulseBlasterEsrpro():
     def program(self,program):
         pb_start_programming(PULSE_PROGRAM)
         #Programmbeginn
-        start = pb_inst_pbonly(0b000000000000000000000000,CONTINUE,0,200.0)
-        pb_inst_pbonly(0b111111111111111111111111,BRANCH,start,200.0)
+        for line in re.split("\n",program):
+            words = re.split(",",line)
+            words[0] = pb_inst_pbonly([ast.literal_eval(words[i]) for i in [1,2,3,4] ])
+        #start = pb_inst_pbonly(0b000000000000000000000000,CONTINUE,0,200.0)
+        #pb_inst_pbonly(0b111111111111111111111111,BRANCH,start,200.0)
         #Programmende
         pb_stop_programming()
 
