@@ -23,10 +23,12 @@ class PulseBlasterEsrpro():
         pb_start_programming(PULSE_PROGRAM)
         #Programmbeginn
         lines = re.split("\n",program)
-        start = pb_inst_pbonly(eval(lines[0]))
+        instr = eval(lines[0])
+        start = pb_inst_pbonly(instr[0],instr[1],instr[2],instr[3])
         for i in range(len(lines)):
             if i != 0:
-                eval(lines[i])
+                instr = eval(lines[i])
+                pb_inst_pbonly(instr[0],instr[1],instr[2],instr[3])
         #start = pb_inst_pbonly(0b000000000000000000000000,CONTINUE,0,200.0)
         #pb_inst_pbonly(0b111111111111111111111111,BRANCH,start,200.0)
         #Programmende
