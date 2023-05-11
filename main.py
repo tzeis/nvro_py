@@ -253,12 +253,13 @@ class MainWindow(QMainWindow):
         if self.pb.is_running() == True:
             self.warning_message("PulseBlaster already running, try stopping it before running new Program")
         elif self.pb.is_running() == False:
-            programfile = open(os.path.join(self.pb_program_path,self.ui.external_modulation_combobox.currentText()),"r")
+            filename = os.path.join(self.pb_program_path,self.ui.external_modulation_combobox.currentText())
+            programfile = open(filename,"r")
             program = programfile.read()
             programfile.close()
             self.pb.program(program)
             self.pb.start()
-            self.info_message("PulseBlaster executing program")
+            self.info_message("PulseBlaster executing program "+ filename)
             
     def external_stop_clicked(self):
         if self.pb.is_running() == True:
