@@ -1,48 +1,51 @@
+#Import System and common modules
 import sys
+import re
+import time
+import ast
+import os
+#Import Qt Classes from PySide6
 from PySide6.QtWidgets import QApplication, QMainWindow
 from PySide6.QtCore import QTimer
 from PySide6.QtGui import QColor
+#Import autocompiled UI
 from mainwindow import Ui_MainWindow
-import re
-import time
-import threading
-import ast
-import os
-#Geräte importieren
+#Import Devices
 from sg390serial import Sg390 as Sgclass
 from ke2010gpib import Ke2010 as Vmclass
-from pulseblaster_esrpro import PulseBlasterEsrpro as Pbclass
 #from virtual_vm import Vmvirtual as Vmclass
+from pulseblaster_esrpro import PulseBlasterEsrpro as Pbclass
 
 class MainWindow(QMainWindow):
     def __init__(self):
-        #Initialisierung der grafischen Oberfläche
+        #Initialise the UI
         super().__init__()
         self.ui = Ui_MainWindow()
         self.ui.setupUi(self)
-
-        #Signal Handling
+        #Signal Handling Block
+        #Signal Generator UI
         self.ui.try_ip_pushbutton.clicked.connect(self.connect_microwave_clicked)
         self.ui.sample_frequency_pushbutton.clicked.connect(self.sample_frequency_clicked)
         self.ui.signal_setting_pushbutton.clicked.connect(self.signal_settings_clicked)
         self.ui.dump_signal_setting_pushbutton.clicked.connect(self.dump_signal_settings_clicked)
+        #TODO: Rename Internal Pulse-Modulation Settings to avoid confusion with PB card
         self.ui.pulse_toggle_pushbutton.clicked.connect(self.pulse_toggle_clicked)
         self.ui.dump_pulse_info_pushbutton.clicked.connect(self.dump_pulse_info_clicked)
         self.ui.dump_err_pushbutton.clicked.connect(self.dump_err_clicked)
+        #Readout UI
         self.ui.readout_connect_pushbutton.clicked.connect(self.readout_connect_clicked)
         self.ui.toggle_recording_pushbutton.clicked.connect(self.toggle_recording_clicked)
         self.ui.tag_event_pushbutton.clicked.connect(self.tag_event)
-        #Externer PulseBlaster Signalgenerator
+        #PulseBlaster Card UI
         self.ui.external_pulse_radiobutton.toggled.connect(self.toggle_external_pulse)
         self.ui.external_start_pushbutton.clicked.connect(self.external_start_clicked)
         self.ui.external_stop_pushbutton.clicked.connect(self.external_stop_clicked)
-        #Combobox mit auswählbaren PulseBlasterProgrammen füllen
+        #Populate PulseBlaster program selection
         self.pb_program_path = os.path.join(os.getcwd(),"pulse_blaster_programs")
         self.pb_programs = os.listdir(self.pb_program_path)
         self.ui.external_modulation_combobox.addItems(self.pb_programs)
         
-
-        #Flags setzen und Timer für Aktualisierung implementieren
+        #Set Flags and Make a Timer to refresh life readout display
         self.flag_display_voltage = False
         self.flag_recording = False
         self.timer = QTimer()
