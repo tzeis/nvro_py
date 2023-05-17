@@ -262,22 +262,23 @@ class MainWindow(QMainWindow):
             self.info_message("PulseBlaster executing program "+ filename)
             
     def external_stop_clicked(self):
-        if self.pb.is_running() == True:
+        try:
             self.pb.stop()
             self.info_message("PulseBlaster stopped")
-        elif self.pb.is_running() == False:
-            self.warning_message("PulseBlaster already stopped")
+        except:
+            self.error_message("Could not stop PulseBlaster")
             
-        
-    
-
+    #Messaging System that Implements functionality to display messages in the bottom right text box
     def info_message(self,message):
+        #Turquise Info messages for general use
         self.ui.output_textedit.setTextColor(QColor(0,255,255))      
         self.ui.output_textedit.append(message)
     def warning_message(self,message):
-        self.ui.output_textedit.setTextColor(QColor(255,255,0))      
+        #Orange warning messages, recommended to use for unsupported input (mostly stuff handed with an else clause)
+        self.ui.output_textedit.setTextColor(QColor(255,100,0))      
         self.ui.output_textedit.append(message)
     def error_message(self,message):
+        #Red warning messages, use for exceptions or safety critical warnings
         self.ui.output_textedit.setTextColor(QColor(255,0,0))      
         self.ui.output_textedit.append(message)    
 
