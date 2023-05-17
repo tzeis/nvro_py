@@ -1,25 +1,27 @@
 import pyvisa
+import re
 
-#Erzeugt einen Signalgenerator als Klasse aus Serieller Adresse im string Format
-#rm = pyvisa.ResourceManager()
-
+#Class Implementing Communication with a SG394 signal generator over a VISA Interface
 class Sg390(pyvisa.resources.SerialInstrument):
+    #Lists passed to communicate compatible units
     supported_frequnits=["Hz","kHz","MHz","GHz"]
     supported_amplunits=["dBm","rms","Vpp"]
     supported_timeunits=["ns","us","ms","s"]
     supported_pulse_functions=["square","prbs"]
-    #Funktionsdictionary
+    #Dictionary to translate pulse functions into their associated integer code in the instrument
     func_dict = {"square":"3","prbs":"4"}
+
     def __init__(self,target_port):
+        #Initialize pyvisa
         rm = pyvisa.ResourceManager()
         self.device = rm.open_resource(target_port)
-        #super().__init__(resource_manager = rm,resource_name=target_port)
-        #super = rm.open_resource(target_port)
         self.device.baud_rate=115200
         
-        
     def check_connection(self):
-        return self.device.query("*IDN?")
+        tmp = self.device.query("*IDN?")
+        #Strip linebreaks
+        tmp = re.sub("\n","",tmp)
+        return tmp
 
     def set_amplitude(self,value,unit):
         self.device.write("AMPR"+" "+str(value)+" "+unit)
@@ -101,8 +103,3 @@ class Sg390(pyvisa.resources.SerialInstrument):
         if errcode == "0\r\n":
             errcode = False
         return errcode
-        
-
-#from sg390 import Sg390 as sgclass
-#sg = sgclass("169.254.184.198")
-

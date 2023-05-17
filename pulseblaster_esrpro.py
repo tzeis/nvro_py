@@ -5,6 +5,7 @@ import ast
 class PulseBlasterEsrpro():
 
     def __init__(self):
+        #Initialization according to spinapi documentation
         pb_init()
         pb_core_clock(500)
 
@@ -28,7 +29,7 @@ class PulseBlasterEsrpro():
         for i in range(len(lines)):
             #TODO: remove unsafe eval and replace with ast.literal_eval using opcodes in pb programs
             #Reads an instruction line as list of python data from program string
-            instr = eval(lines[i])
+            instr = ast.literal_eval(lines[i])
             #Passes the instruction to the PulseBlaster card
             pb_inst_pbonly(instr[0],instr[1],instr[2],instr[3])
         #Program stop in spinapi
