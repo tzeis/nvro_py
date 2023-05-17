@@ -1,9 +1,9 @@
+#Importing general Requirements
 import sys
 import time
 import numpy as np
-
 from PySide6 import QtWidgets as qtw
-
+#Importing required MPL Components
 from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
 from matplotlib.backends.backend_qt5agg import NavigationToolbar2QT as NavigationToolbar
 import matplotlib.pyplot as plt
@@ -11,6 +11,7 @@ import matplotlib.pyplot as plt
 import matplotlib.style as mplstyle
 mplstyle.use('fast')
 
+#Matplotlib Widget is implemented in QT as Extension of General QWidget Class as is recommended in MPL documentation
 class MplWidget(qtw.QWidget):
     def __init__(self,parent=None):
         super(MplWidget,self).__init__(parent)
@@ -39,7 +40,6 @@ class MplWidget(qtw.QWidget):
 
     #refesh canvas
     def refresh(self):
-        #self.ax.clear()
         plt.cla()
         #self.ax.set_ylim([-1,3])
         self.ax.plot(self.x,self.y)

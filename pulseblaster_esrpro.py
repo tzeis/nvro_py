@@ -20,24 +20,25 @@ class PulseBlasterEsrpro():
             return False
 
     def program(self,program):
+        #Program start in spinapi
         pb_start_programming(PULSE_PROGRAM)
-        #Programmbeginn
+        #Split program string by linebreaks
         lines = re.split("\n",program)
-        for i in range(len(lines)-1):
+        #for-loop sequentially programming instructions from given lines
+        for i in range(len(lines)):
+            #TODO: remove unsafe eval and replace with ast.literal_eval using opcodes in pb programs
+            #Reads an instruction line as list of python data from program string
             instr = eval(lines[i])
+            #Passes the instruction to the PulseBlaster card
             pb_inst_pbonly(instr[0],instr[1],instr[2],instr[3])
-        #start = pb_inst_pbonly(0b000000000000000000000000,CONTINUE,0,200.0)
-        #pb_inst_pbonly(0b111111111111111111111111,BRANCH,start,200.0)
-        #Programmende
+        #Program stop in spinapi
         pb_stop_programming()
 
     def start(self):
-        pb_init()
         pb_reset()
         pb_start()
 
     def stop(self):
-        pb_init()
         pb_stop()
 
     def disconnect(self):

@@ -1,4 +1,3 @@
-.\venv\Scripts\activate.bat
-pip install -r requirements.txt
-python main.py
-
+call .\venv\Scripts\activate.bat
+call pip install -r requirements.txt
+call python main.py
