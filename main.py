@@ -15,6 +15,7 @@ from sg390serial import Sg390 as Sgclass
 from ke2010gpib import Ke2010 as Vmclass
 #from virtual_vm import Vmvirtual as Vmclass
 from pulseblaster_esrpro import PulseBlasterEsrpro as Pbclass
+from system_timer import System_timer as Timerclass
 
 class MainWindow(QMainWindow):
     def __init__(self):
@@ -58,7 +59,7 @@ class MainWindow(QMainWindow):
         #Recording functionality init
         self.rfile = None
 
-        #Vorfüllen der Verbindungen aus connectioncache Datei
+        #Prefill Forms from connectioncache file
         prev_conn_cache = open("connectioncache","r+")
         prev_conn = ast.literal_eval(prev_conn_cache.read())
         if prev_conn["sg"]!="":
@@ -67,36 +68,36 @@ class MainWindow(QMainWindow):
             self.ui.readout_connect_line.setText(prev_conn["ro"])
             
         
-    #Signalgenerator verbinden
+    #Connect signal generator
     def connect_microwave_clicked(self):
-        #Inhalt aus Lineedit nehmen
-        target_ip = self.ui.target_ip_line.text()
+        #Take destination from lineedit
+        #TODO: make less confusing variable name
+        target_port = self.ui.target_ip_line.text()
+        #Try to connect
         try:
-            self.sg = Sgclass(target_ip)
+            #Create signal generator object from class
+            self.sg = Sgclass(target_port)
             sg_id = self.sg.check_connection()
-            #Bei Erfolg durchgeben
-            self.info_message("Connected to "+sg_id+" at "+target_ip)
-            #Auswahlboxen füllen
-            frequnits = self.sg.supported_frequnits
-            amplunits = self.sg.supported_amplunits
-            timeunits = self.sg.supported_timeunits
-            pulsefuncs = self.sg.supported_pulse_functions
-            self.ui.sample_units_combobox.addItems(frequnits)
-            self.ui.frequency_units_combobox.addItems(frequnits)
-            self.ui.amplitude_units_combobox.addItems(amplunits)
-            self.ui.pulse_timeunits_combobox.addItems(timeunits)
-            self.ui.pulse_function_combobox.addItems(pulsefuncs)
+            #Pass message after connecting
+            self.info_message("Connected to "+sg_id+" at "+target_port)
+            #Fill comboboxes with units specified in signal generator class
+            self.ui.sample_units_combobox.addItems(self.sg.supported_frequnits)
+            self.ui.frequency_units_combobox.addItems(self.sg.supported_frequnits)
+            self.ui.amplitude_units_combobox.addItems(self.sg.supported_amplunits)
+            self.ui.pulse_timeunits_combobox.addItems(self.sg.supported_timeunits)
+            self.ui.pulse_function_combobox.addItems(self.sg.supported_pulse_functions)
         except:
             self.warning_message("Could not connect to this adress")
         
     
-    #Frequenzabtastung
+    #Frequency sampling
     def sample_frequency_clicked(self):
+        #Get inputs
         sample_from = self.ui.from_frequency_line.text()
         sample_to = self.ui.to_frequency_line.text()
         sample_step = self.ui.stepsize_frequency_line.text()
         sample_unit = self.ui.sample_units_combobox.currentText()
-        #Frequenzen entweder als Integer oder punktseparierter Float
+        #Frequency either Integer or float
         sample_re = "(^[0-9]+$)|(^[0-9]*\.[0-9]+$)"
         #Input bereinigen und nach Bestehehn Sampling durchführen
         if sample_unit != "":
@@ -106,8 +107,6 @@ class MainWindow(QMainWindow):
                         target_freqs = [float(sample_from) + x * float(sample_step) for x in range(int((float(sample_to)-float(sample_from))//float(sample_step)))]
                         j=0
                         for i in target_freqs:
-                            #print("Sampled" + str(i) + sample_unit)
-                            #time.sleep(0.01) #Delay zum Debuggen
                             self.sg.set_frequency(i,sample_unit)
                             #Progress-Bar Aktualisieren
                             j+=1
@@ -232,7 +231,7 @@ class MainWindow(QMainWindow):
     def record(self,tag = "0"):
         if self.flag_recording == True:
             try:
-                self.rfile.write( str(self.vm.read_voltage()) + "," + str(self.vm.read_unit()) + "," + str(time.time()) + "," + tag + "\n")
+                self.rfile.write( str(self.vm.read_voltage()) + "," + str(self.vm.read_unit()) + "," + str(time.time()) + "," + str(self.sg.read_voltage()) + tag + "\n")
             except:
                 self.ui.output_textedit.append("Could not write to file")
 

@@ -15,6 +15,7 @@ class Ke2010():
     def check_connection(self):
         return self.device.query("*IDN?")
 
+    #TODO: rename to neutral read value
     def read_voltage(self):
         #Apply averaging filter (currently disabled)
         #self.device.write('SENSe:VOLT:DC:AVER:COUNt 2')
